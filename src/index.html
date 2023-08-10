@@ -3,11 +3,52 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="./css/style.css">
 		<script defer type="module" src="index.js"></script>
-    <title>JS template</title>
+    <title>Pixel Paint</title>
   </head>
   <body>
-    project template
+    <div class="really-clear-popup">
+      <p class="really-clear-popup__question">Do you want to clear Canvas?</p>
+      <div class="really-clear-popup__buttons">
+        <button class="really-clear-popup__no-button">No</button>
+        <button class="really-clear-popup__yes-button">Yes</button>
+      </div>
+    </div>
+    <div class="wrapper">
+      <div class="error">
+        <p class="error__message">
+          Please fill both of inputs
+        </p>
+      </div>
+      <div class="settings-container">
+        <h2 class="settings-container__title">Настройки холста</h2>
+        <div class="input-container">
+          <input type="text" id="width-input" class="input-field input-field--width" placeholder="Ширина">
+        </div>
+        <div class="input-container">
+          <input type="text" id="height-input" class="input-field input-field--height" placeholder="Высота">
+        </div>
+        <button class="submit-button" id="submit-button">Подтвердить</button>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__functionality">
+          <label>
+            <span class="canvas__color-pick-span">Pick color:</span>
+            <input type="color" class="canvas__color-pick" id="colorInput">
+          </label>
+          <button class="canvas__get-hex-button" id="get-hex">Get hex</button>
+          <div class="canvas__zoom">
+            <button class="zoom-in">+</button>
+            <button class="zoom-out">-</button>
+          </div>
+          <button class="canvas__clear-canvas">clear all</button>
+        </div>
+        <div class="canvas__pixels">
+          
+        </div>
+      </div>
+    </div>
   </body>
 </html>
