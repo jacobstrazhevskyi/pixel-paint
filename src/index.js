@@ -6,75 +6,105 @@ const submitButton = document.getElementById('submit-button');
 const widthInput = document.getElementById('width-input');
 const heightInput = document.getElementById('height-input');
 const settingsPopup = document.querySelector('.settings-container');
-
 const canvas = document.querySelector('.canvas');
-
 const colorInput = document.getElementById('colorInput');
-
 const getHexButton = document.getElementById('get-hex');
-
 const canvasPixels = document.querySelector('.canvas__pixels');
-
 let rowsPixels = document.querySelectorAll('.canvas__pixels-row');
-
 const clearWarningPopup = document.querySelector('.really-clear-popup');
 const clearSubmitButton = document.querySelector('.really-clear-popup__yes-button');
 const clearDeclineButton = document.querySelector('.really-clear-popup__no-button');
-
 const zoomInButton = document.getElementById('zoom-in-button');
 const zoomOutButton = document.getElementById('zoom-out-button');
+const clearCanvasButton = document.querySelector('.canvas__clear-canvas');
+const errorPopup = document.querySelector('.error');
 
 let pixelSize = 50;
 
-function zoomPixelsIn(rowPixels) {
-  const pixelsRow = rowPixels.querySelectorAll('.canvas__pixel');
+function setPixelSize(pixelsRow) {
+  const rowPixels = pixelsRow.querySelectorAll('.canvas__pixel');
 
-  pixelsRow.forEach((pixel) => {
+  rowPixels.forEach((pixel) => {
     pixel.style.minWidth = `${pixelSize}px`;
     pixel.style.minHeight = `${pixelSize}px`;
   });
 }
 
-function zoomPixelsOut(rowPixels) {
-  const pixelsRow = rowPixels.querySelectorAll('.canvas__pixel');
-
-  pixelsRow.forEach((pixel) => {
-    pixel.style.minWidth = `${pixelSize}px`;
-    pixel.style.minHeight = `${pixelSize}px`;
+function clearPixelColors() {
+  rowsPixels.forEach((row) => {
+    row.querySelectorAll('.canvas__pixel').forEach((pixel) => {
+      pixel.style.backgroundColor = '#ffffff';
+      pixel.style.col = '#ffffff';
+    });
   });
+}
+
+function initializePixelEvents() {
+  rowsPixels.forEach((row) => {
+    const pixels = row.querySelectorAll('.canvas__pixel');
+
+    pixels.forEach((pixel) => {
+      pixel.style.col = '#ffffff';
+
+      pixel.addEventListener('click', () => {
+        pixel.style.backgroundColor = colorInput.value;
+        pixel.style.col = colorInput.value;
+      });
+
+      pixel.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        pixel.style.backgroundColor = '#ffffff';
+        pixel.style.col = '#ffffff';
+      });
+    });
+  });
+}
+
+function createPixelsRow() {
+  const pixelsRow = document.createElement('div');
+  pixelsRow.classList.add('canvas__pixels-row');
+  return pixelsRow;
+}
+
+function generateCanvasRowsAndPixels() {
+  const width = +widthInput.value;
+  const height = +heightInput.value;
+
+  for (let i = 0; i < height; i++) {
+    const pixelsRow = createPixelsRow();
+
+    for (let j = 0; j < width; j++) {
+      const pixel = document.createElement('div');
+      pixel.classList.add('canvas__pixel');
+      pixelsRow.append(pixel);
+    }
+
+    canvasPixels.append(pixelsRow);
+  }
+
+  rowsPixels = document.querySelectorAll('.canvas__pixels-row');
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
 }
 
 zoomInButton.addEventListener('click', () => {
   pixelSize += 5;
-
-  for (let i = 0; i < rowsPixels.length; i++) {
-    zoomPixelsIn(rowsPixels[i]);
-  }
+  rowsPixels.forEach(setPixelSize);
 });
 
 zoomOutButton.addEventListener('click', () => {
   pixelSize -= 5;
-
-  for (let i = 0; i < rowsPixels.length; i++) {
-    zoomPixelsOut(rowsPixels[i]);
-  }
+  rowsPixels.forEach(setPixelSize);
 });
 
-const clearCanvasButton = document.querySelector('.canvas__clear-canvas');
 clearCanvasButton.onclick = () => {
   clearWarningPopup.style.display = 'flex';
 };
 
 clearSubmitButton.onclick = () => {
-  for (let i = 0; i < rowsPixels.length; i++) {
-    const pixels = rowsPixels[i].querySelectorAll('.canvas__pixel');
-
-    for (let j = 0; j < pixels.length; j++) {
-      pixels[j].style.backgroundColor = '#ffffff';
-      pixels[j].style.col = '#ffffff';
-    }
-  }
-
+  clearPixelColors();
   clearWarningPopup.style.display = 'none';
 };
 
@@ -82,59 +112,14 @@ clearDeclineButton.onclick = () => {
   clearWarningPopup.style.display = 'none';
 };
 
-function getCanvasPixels() {
-  for (let i = 0; i < rowsPixels.length; i++) {
-    const pixels = rowsPixels[i].querySelectorAll('.canvas__pixel');
-
-    for (let j = 0; j < pixels.length; j++) {
-      pixels[j].style.col = '#ffffff';
-    }
-  }
-
-  for (let i = 0; i < rowsPixels.length; i++) {
-    const pixels = rowsPixels[i].querySelectorAll('.canvas__pixel');
-
-    for (let j = 0; j < pixels.length; j++) {
-      pixels[j].addEventListener('click', () => {
-        pixels[j].style.backgroundColor = colorInput.value;
-        pixels[j].style.col = colorInput.value;
-      });
-
-      pixels[j].addEventListener('contextmenu', (event) => {
-        event.preventDefault();
-        pixels[j].style.backgroundColor = '#ffffff';
-        pixels[j].style.col = '#ffffff';
-      });
-    }
-  }
-}
-
-const errorPopup = document.querySelector('.error');
-
 submitButton.addEventListener('click', () => {
   if (!widthInput.value || !heightInput.value) {
     errorPopup.style.display = 'block';
-
     return;
   }
 
-  const pixelsRow = document.createElement('div');
-  pixelsRow.classList.add('canvas__pixels-row');
-
-  for (let i = 0; i < +widthInput.value; i++) {
-    const pixel = document.createElement('div');
-
-    pixel.classList.add('canvas__pixel');
-    pixelsRow.append(pixel);
-  }
-
-  for (let i = 0; i < +heightInput.value; i++) {
-    canvasPixels.append(pixelsRow.cloneNode(true));
-  }
-
-  rowsPixels = document.querySelectorAll('.canvas__pixels-row');
-
-  getCanvasPixels();
+  generateCanvasRowsAndPixels();
+  initializePixelEvents();
 
   errorPopup.style.display = 'none';
   settingsPopup.style.display = 'none';
@@ -144,23 +129,17 @@ submitButton.addEventListener('click', () => {
 getHexButton.onclick = () => {
   let result = '';
 
-  for (let i = 0; i < rowsPixels.length; i++) {
-    const pixels = rowsPixels[i].querySelectorAll('.canvas__pixel');
+  rowsPixels.forEach((row) => {
+    const pixels = row.querySelectorAll('.canvas__pixel');
 
     result += '00';
 
-    for (let j = 0; j < pixels.length; j++) {
-      result += pixels[j].style.col;
-    }
-  }
+    pixels.forEach((pixel) => {
+      result += pixel.style.col;
+    });
+  });
 
-  result = [...result];
+  result = result.replace(/#/g, '');
 
-  for (let i = 0; i < result.length; i++) {
-    if (result[i] === '#') {
-      result.splice(i, 1);
-    }
-  }
-
-  navigator.clipboard.writeText(result.join(''));
+  copyToClipboard(result);
 };
