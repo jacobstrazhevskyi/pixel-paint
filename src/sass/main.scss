@@ -47,9 +47,38 @@ body {
 }
 
 .input-container {
+  margin-bottom: 10px;
+}
+
+.filter {
+  appearance: none;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #eaf7e3;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
+.filter:hover {
+  background-color: #d4f1cd;
+}
+
+.filter:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #8bc34a;
+}
+
+.filter option {
+  background-color: #eaf7e3;
+  color: #333;
+}
+
+.filter option:hover {
+  background-color: #d4f1cd;
+}
 .input-field {
   background-color: $input-bg-color;
   border: none;
@@ -135,6 +164,10 @@ body {
     position: absolute;
     left: 20px;
     top: 30%;
+
+    @media only screen and (max-width: 540px) {
+      top: 5%;
+    }
   }
 
   &__functionality > label {

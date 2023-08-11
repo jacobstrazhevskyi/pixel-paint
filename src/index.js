@@ -18,6 +18,7 @@ const zoomInButton = document.getElementById('zoom-in-button');
 const zoomOutButton = document.getElementById('zoom-out-button');
 const clearCanvasButton = document.querySelector('.canvas__clear-canvas');
 const errorPopup = document.querySelector('.error');
+const filterSelect = document.getElementById('filter');
 
 let pixelSize = 50;
 
@@ -132,7 +133,7 @@ getHexButton.onclick = () => {
   rowsPixels.forEach((row) => {
     const pixels = row.querySelectorAll('.canvas__pixel');
 
-    result += '00';
+    result += `${filterSelect.value}`;
 
     pixels.forEach((pixel) => {
       result += pixel.style.col;
