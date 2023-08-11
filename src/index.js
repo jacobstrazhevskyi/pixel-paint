@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 /* eslint-disable no-plusplus */
 
@@ -19,6 +20,45 @@ let rowsPixels = document.querySelectorAll('.canvas__pixels-row');
 const clearWarningPopup = document.querySelector('.really-clear-popup');
 const clearSubmitButton = document.querySelector('.really-clear-popup__yes-button');
 const clearDeclineButton = document.querySelector('.really-clear-popup__no-button');
+
+const zoomInButton = document.getElementById('zoom-in-button');
+const zoomOutButton = document.getElementById('zoom-out-button');
+
+let pixelSize = 50;
+
+function zoomPixelsIn(rowPixels) {
+  const pixelsRow = rowPixels.querySelectorAll('.canvas__pixel');
+
+  pixelsRow.forEach((pixel) => {
+    pixel.style.minWidth = `${pixelSize}px`;
+    pixel.style.minHeight = `${pixelSize}px`;
+  });
+}
+
+function zoomPixelsOut(rowPixels) {
+  const pixelsRow = rowPixels.querySelectorAll('.canvas__pixel');
+
+  pixelsRow.forEach((pixel) => {
+    pixel.style.minWidth = `${pixelSize}px`;
+    pixel.style.minHeight = `${pixelSize}px`;
+  });
+}
+
+zoomInButton.addEventListener('click', () => {
+  pixelSize += 5;
+
+  for (let i = 0; i < rowsPixels.length; i++) {
+    zoomPixelsIn(rowsPixels[i]);
+  }
+});
+
+zoomOutButton.addEventListener('click', () => {
+  pixelSize -= 5;
+
+  for (let i = 0; i < rowsPixels.length; i++) {
+    zoomPixelsOut(rowsPixels[i]);
+  }
+});
 
 const clearCanvasButton = document.querySelector('.canvas__clear-canvas');
 clearCanvasButton.onclick = () => {
